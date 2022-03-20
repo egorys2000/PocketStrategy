@@ -1,0 +1,22 @@
+fileFormatVersion: 2
+guid: 17fe8eafacd46514ab5697addb90c18b
+TrueTypeFontImporter:
+  externalObjects: {}
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontNames:
+  - WC_AquaBlues_Bta
+  fallbackFontReferences:
+  - {fileID: 12800000, guid: 148d5c76000989b4c9cd1e4da168b0b7, type: 3}
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  useLegacyBoundsCalculation: 0
+  shouldRoundAdvanceValue: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
