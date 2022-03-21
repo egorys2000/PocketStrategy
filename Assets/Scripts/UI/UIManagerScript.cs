@@ -24,13 +24,13 @@ public class UIManagerScript : MonoBehaviour
             WelcomeScreenUI.SetActive(false);
             PlayContentUI.SetActive(false);
             MapCreatorUI.SetActive(false);
-            MainPlayContent.SetActive(false);
+            MainPlayContentUI.SetActive(false);
 
             if (value == GameScreen.Play)
             {
                 PartyRunning = true;
                 PlayContentUI.SetActive(true);
-                MainPlayContent.SetActive(true);
+                MainPlayContentUI.SetActive(true);
             }
 
             if (value == GameScreen.MainMenu)
@@ -43,7 +43,7 @@ public class UIManagerScript : MonoBehaviour
             {
                 PartyRunning = false;
                 PlayContentUI.SetActive(true);
-                MainPlayContent.SetActive(true);
+                MainPlayContentUI.SetActive(true);
                 PauseScreenUI.SetActive(true);
             }
 
@@ -90,7 +90,7 @@ public class UIManagerScript : MonoBehaviour
 
     [SerializeField]
     private GameObject WelcomeScreenUI, PauseScreenUI, HowToPlayScreenUI, PlayContentUI, 
-        MapCreatorUI, MainPlayContent;
+        MapCreatorUI, MainPlayContentUI, TurnColorUI, UnitBuilderUI;
 
     public void BeginNewGame()
     {
@@ -132,6 +132,16 @@ public class UIManagerScript : MonoBehaviour
     void Awake() 
     {
         ChangeMapPreset();
+    }
+
+    public void ChangeTurnColor(Color color) 
+    {
+        TurnColorUI.GetComponent<Image>().color = color;
+    }
+
+    public void AppearUnitBuilder(bool on) 
+    {
+        UnitBuilderUI.SetActive(on);
     }
 
     public void ChangeMapPreset() 

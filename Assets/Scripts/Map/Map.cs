@@ -68,17 +68,22 @@ public class Map : MonoBehaviour
         Color[] Colors = new Color[Vertices.Length];
         int[] Tris = new int[Cells.Count * tris_per_cell];
 
+        //collect cells mesh
         for (int i = 0; i < Cells.Count; i++) 
         {
             Cells[i].MeshData.Mesh.vertices.CopyTo(Vertices, vertices_per_cell * i);
             Cells[i].MeshData.Mesh.colors.CopyTo(Colors, vertices_per_cell * i);
             Cells[i].MeshData.Mesh.normals.CopyTo(Normals, vertices_per_cell * i);            
         }
-        //Debug.Log(Cells[0].MeshData.Mesh.colors[0]);
+
         for (int i = 0; i < Cells.Count; i++)
         {
             AddNumberToArr(i * vertices_per_cell, Cells[i].MeshData.Mesh.triangles).CopyTo(Tris, tris_per_cell * i);
         }
+
+        //collect cells content mesh
+
+
 
         Mesh mesh = new Mesh();
 

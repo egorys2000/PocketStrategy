@@ -12,6 +12,19 @@ public class GameCoreManager : MonoBehaviour
     [SerializeField]
     private Map Map;
 
+    [SerializeField]
+    private GameObject Canvas, StartScreen;
+
+    private void Start() 
+    {
+        foreach (Transform child in Canvas.transform)
+        {
+            child.gameObject.SetActive(false);
+        }
+
+        StartScreen.SetActive(true);
+    }
+
     private Cell CellClicked(Vector2 ClickPos) 
     {
         Cell ReturnCell = null;
@@ -44,8 +57,12 @@ public class GameCoreManager : MonoBehaviour
 
     IEnumerator MainCoroutine;
 
-    [SerializeField]
-    private Player WhoseTurn;
+    private Player _whose_turn;
+    public Player WhoseTurn 
+    {
+        get { return _whose_turn; }
+        private set { _whose_turn = value; }
+    }
     private int _turn_count;
 
     public int TurnCount
@@ -56,6 +73,8 @@ public class GameCoreManager : MonoBehaviour
             _turn_count = value;
             int Players = Map.CurrentPlayersList.Count - 2;
             WhoseTurn = Map.CurrentPlayersList[value % Players + 2];
+            ScreenController.ChangeTurnColor(WhoseTurn.Color);
+
             Debug.Log("It's " + WhoseTurn.Name + " turn, " + WhoseTurn.OwnedCells.Count.ToString() + " cells in posession");
         }
     }
@@ -96,15 +115,25 @@ public class GameCoreManager : MonoBehaviour
                     ((Vector2)TouchBeginPos - currentTouch.position).magnitude < 1f) //finger moved on empirically small distance
                 {
                     var ClickedCell = CellClicked(ClickedPos());
-                    if (ClickedCell != null) 
+                    anything_done = true;
+
+                    if (CellsHighlighted) //dehighlight
                     {
-                        anything_done = true;
-                        if (WhoseTurn == ClickedCell.CellOwner && !CellsHighlighted)
-                            HighlightPlayerCells(WhoseTurn, true);
-                        if (WhoseTurn != ClickedCell.CellOwner && CellsHighlighted)
+                        if (ClickedCell == null)
                             HighlightPlayerCells(WhoseTurn, false);
+                        else if (WhoseTurn != ClickedCell.CellOwner)
+                            HighlightPlayerCells(WhoseTurn, false);                        
                     }
-                    //PassTurn();
+
+                    if (ClickedCell != null) //highlight
+                    {
+                        if (WhoseTurn == ClickedCell.CellOwner)
+                        {                            
+                            HighlightAreaClicked++;
+                            if (!CellsHighlighted) HighlightPlayerCells(WhoseTurn, true);
+                        }
+                    }
+                    
                 }
             }
 
@@ -114,17 +143,20 @@ public class GameCoreManager : MonoBehaviour
         }
     }
 
-    private void PassTurn() 
+    public void PassTurn() 
     {
         TurnCount = TurnCount + 1;
     }
-
+    [SerializeField]
     private bool CellsHighlighted = false;
     private List<Cell> HighlightedCells = new List<Cell>();
+    [SerializeField]
+    private int HighlightAreaClicked = 0;
     private void HighlightPlayerCells(Player player, bool on) // all Player player cells get highlighted, others are darkened
     {
         //on = true if highlight, on = false, if dehighlight
         CellsHighlighted = on;
+        ScreenController.AppearUnitBuilder(on);
         if (on)
             foreach (var Cell in Map.Cells)
             {
@@ -141,6 +173,8 @@ public class GameCoreManager : MonoBehaviour
                     HighlightedCells.Add(Cell);
                 }
                 else Map.CellHighlight(Cell, false);
+
+                
             }
         else
         {
@@ -150,6 +184,7 @@ public class GameCoreManager : MonoBehaviour
                 else Map.CellHighlight(Cell, true);
             }
             HighlightedCells = new List<Cell>();
+            HighlightAreaClicked = 0;
         }
 
     }
